@@ -117,6 +117,36 @@ export default {
 				'spin-slow': {
 					'0%': { transform: 'rotate(0deg)' },
 					'100%': { transform: 'rotate(360deg)' }
+				},
+				'glitch': {
+					'0%, 5%': { transform: 'translate(0)' },
+					'1%': { transform: 'translate(-5px, 5px)' },
+					'2%': { transform: 'translate(5px, -5px)' },
+					'3%': { transform: 'translate(-5px, -5px)' },
+					'4%': { transform: 'translate(5px, 5px)' },
+				},
+				'scan': {
+					'0%': { backgroundPosition: '0 -100vh' },
+					'100%': { backgroundPosition: '0 100vh' }
+				},
+				'wave': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'25%': { transform: 'translateY(-5px)' },
+					'75%': { transform: 'translateY(5px)' }
+				},
+				'rotate-y': {
+					'0%': { transform: 'rotateY(0deg)' },
+					'100%': { transform: 'rotateY(360deg)' }
+				},
+				'flip': {
+					'0%': { transform: 'rotateX(90deg)', opacity: '0' },
+					'100%': { transform: 'rotateX(0)', opacity: '1' }
+				},
+				'morph': {
+					'0%, 100%': { borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%' },
+					'25%': { borderRadius: '30% 60% 70% 40% / 50% 60% 30% 60%' },
+					'50%': { borderRadius: '50% 60% 50% 70% / 40% 40% 60% 50%' },
+					'75%': { borderRadius: '60% 50% 60% 50% / 50% 60% 70% 40%' }
 				}
 			},
 			animation: {
@@ -130,7 +160,13 @@ export default {
 				'pulse-soft': 'pulse-soft 3s infinite ease-in-out',
 				'float': 'float 6s infinite ease-in-out',
 				'shimmer': 'shimmer 2s infinite linear',
-				'spin-slow': 'spin-slow 8s linear infinite'
+				'spin-slow': 'spin-slow 8s linear infinite',
+				'glitch': 'glitch 1s infinite',
+				'scan': 'scan 2s linear infinite',
+				'wave': 'wave 2s infinite ease-in-out',
+				'rotate-y': 'rotate-y 3s linear infinite',
+				'flip': 'flip 0.5s ease-out',
+				'morph': 'morph 8s ease-in-out infinite'
 			},
 			fontFamily: {
 				sans: ['Inter', 'sans-serif'],
