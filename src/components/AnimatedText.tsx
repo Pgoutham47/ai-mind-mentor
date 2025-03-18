@@ -7,9 +7,11 @@ interface AnimatedTextProps {
   className?: string;
   once?: boolean;
   delay?: number;
-  animation?: 'slide-up' | 'slide-right' | 'fade-in' | 'glitch' | 'wave';
+  animation?: 'slide-up' | 'slide-right' | 'fade-in' | 'glitch' | 'wave' | 'typewriter';
   staggerChildren?: boolean;
   glowColor?: string;
+  typewriterCursor?: boolean;
+  typewriterSpeed?: number;
 }
 
 export const AnimatedText: React.FC<AnimatedTextProps> = ({
@@ -19,10 +21,15 @@ export const AnimatedText: React.FC<AnimatedTextProps> = ({
   delay = 0,
   animation = 'slide-up',
   staggerChildren = false,
-  glowColor
+  glowColor,
+  typewriterCursor = true,
+  typewriterSpeed = 50
 }) => {
   const elementRef = useRef<HTMLDivElement>(null);
   const hasAnimated = useRef(false);
+  const typewriterRef = useRef<string>('');
+  const typewriterIndexRef = useRef<number>(0);
+  const typewriterTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -35,6 +42,9 @@ export const AnimatedText: React.FC<AnimatedTextProps> = ({
               if (elementRef.current) {
                 if (staggerChildren) {
                   // No immediate class addition - will be handled per character
+                } else if (animation === 'typewriter') {
+                  // Typewriter animation is handled separately
+                  startTypewriterAnimation();
                 } else {
                   elementRef.current.classList.add(`animate-${animation}`);
                   elementRef.current.style.opacity = '1';
@@ -50,6 +60,11 @@ export const AnimatedText: React.FC<AnimatedTextProps> = ({
               elementRef.current.style.opacity = '0';
             }
             hasAnimated.current = false;
+            
+            // Reset typewriter animation if applicable
+            if (animation === 'typewriter') {
+              resetTypewriterAnimation();
+            }
           }
         });
       },
@@ -60,8 +75,57 @@ export const AnimatedText: React.FC<AnimatedTextProps> = ({
       observer.observe(elementRef.current);
     }
 
-    return () => observer.disconnect();
-  }, [once, delay, animation]);
+    return () => {
+      observer.disconnect();
+      if (typewriterTimerRef.current !== null) {
+        window.clearTimeout(typewriterTimerRef.current);
+      }
+    };
+  }, [once, delay, animation, text]);
+
+  // Typewriter animation functions
+  const startTypewriterAnimation = () => {
+    if (animation !== 'typewriter' || !elementRef.current) return;
+    
+    elementRef.current.style.opacity = '1';
+    typewriterIndexRef.current = 0;
+    typewriterRef.current = '';
+    
+    const typeNextChar = () => {
+      if (typewriterIndexRef.current < text.length) {
+        typewriterRef.current += text[typewriterIndexRef.current];
+        typewriterIndexRef.current++;
+        
+        if (elementRef.current) {
+          const textContent = elementRef.current.querySelector('.typewriter-text');
+          if (textContent) {
+            textContent.textContent = typewriterRef.current;
+          }
+        }
+        
+        typewriterTimerRef.current = window.setTimeout(typeNextChar, typewriterSpeed);
+      }
+    };
+    
+    typeNextChar();
+  };
+  
+  const resetTypewriterAnimation = () => {
+    typewriterIndexRef.current = 0;
+    typewriterRef.current = '';
+    
+    if (typewriterTimerRef.current !== null) {
+      window.clearTimeout(typewriterTimerRef.current);
+      typewriterTimerRef.current = null;
+    }
+    
+    if (elementRef.current) {
+      const textContent = elementRef.current.querySelector('.typewriter-text');
+      if (textContent) {
+        textContent.textContent = '';
+      }
+    }
+  };
 
   // Handle staggered character animations
   const renderStaggeredText = () => {
@@ -115,12 +179,25 @@ export const AnimatedText: React.FC<AnimatedTextProps> = ({
       </div>
     );
   };
+  
+  // Handle typewriter animation
+  const renderTypewriterText = () => {
+    return (
+      <div className="typewriter-container">
+        <span className="typewriter-text"></span>
+        {typewriterCursor && (
+          <span className="typewriter-cursor">|</span>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div 
       ref={elementRef} 
       className={cn(
         animation === 'glitch' ? 'opacity-100' : 'opacity-0',
+        animation === 'typewriter' ? 'typewriter' : '',
         className
       )} 
       style={{ 
@@ -130,7 +207,8 @@ export const AnimatedText: React.FC<AnimatedTextProps> = ({
     >
       {staggerChildren ? renderStaggeredText() : 
        animation === 'wave' ? renderWaveText() : 
-       animation === 'glitch' ? renderGlitchText() : 
+       animation === 'glitch' ? renderGlitchText() :
+       animation === 'typewriter' ? renderTypewriterText() : 
        text}
     </div>
   );

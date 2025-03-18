@@ -83,11 +83,46 @@ const Index = () => {
       };
     };
     
+    // Add CSS for typewriter animation
+    const addTypewriterStyles = () => {
+      const styleEl = document.createElement('style');
+      styleEl.textContent = `
+        .typewriter .typewriter-cursor {
+          display: inline-block;
+          width: 2px;
+          background-color: currentColor;
+          animation: typewriter-blink 0.7s infinite;
+        }
+        
+        @keyframes typewriter-blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+        
+        .typewriter {
+          display: inline-block;
+        }
+        
+        .typewriter-container {
+          display: inline-flex;
+          align-items: center;
+        }
+      `;
+      document.head.appendChild(styleEl);
+      
+      return () => {
+        document.head.removeChild(styleEl);
+      };
+    };
+    
     // Add event listener to the document
     document.addEventListener('click', handleLinkClick);
     
     // Create mouse trail
     const removeMouseTrail = createMouseTrail();
+    
+    // Add typewriter styles
+    const removeTypewriterStyles = addTypewriterStyles();
     
     // Scroll to the section if there's a hash in the URL on page load
     if (window.location.hash) {
@@ -104,6 +139,7 @@ const Index = () => {
     return () => {
       document.removeEventListener('click', handleLinkClick);
       removeMouseTrail();
+      removeTypewriterStyles();
     };
   }, []);
 

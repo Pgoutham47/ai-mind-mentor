@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { ArrowRight, Play } from 'lucide-react';
+import AnimatedText from './AnimatedText';
 
 const CallToAction = () => {
   return (
@@ -34,13 +35,16 @@ const CallToAction = () => {
             Start Your Journey Today
           </span>
           
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-balance">
-            Build & Scale Smarter with Insirra GPT
-          </h2>
+          <AnimatedText
+            text="Your Startup, Supercharged by AI"
+            className="text-4xl md:text-5xl font-bold mb-6 text-balance"
+            animation="glitch"
+            glowColor="rgba(255, 255, 255, 0.8)"
+          />
           
           <p className="text-lg md:text-xl mb-10 text-white/90 max-w-2xl mx-auto">
             Join thousands of founders who are leveraging AI to make better decisions, 
-            secure funding, and build successful companies.
+            secure funding, and build successful companies with the Insirra Forge ecosystem.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -48,7 +52,7 @@ const CallToAction = () => {
               href="#" 
               className="bg-white text-primary hover:bg-white/90 px-8 py-3 rounded-full font-medium transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center gap-2 min-w-44"
             >
-              Try for Free
+              Join Insirra Forge
               <ArrowRight className="h-4 w-4" />
             </a>
             <a 
@@ -56,7 +60,7 @@ const CallToAction = () => {
               className="bg-transparent hover:bg-white/10 border border-white px-8 py-3 rounded-full font-medium transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 min-w-44"
             >
               <Play className="h-4 w-4" />
-              See Demo
+              Watch Demo
             </a>
           </div>
           

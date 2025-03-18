@@ -92,16 +92,18 @@ const Hero: React.FC = () => {
         <div className="w-full lg:w-1/2 space-y-6 text-center lg:text-left">
           <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary mb-2 text-sm font-medium">
             <span className="animate-pulse mr-2 h-2 w-2 rounded-full bg-primary"></span>
-            AI-Powered Startup Guidance
+            Insirra Forge - Startup Acceleration Hub
           </div>
           
           <AnimatedText 
-            text="Your AI-Powered Startup Mentor"
+            text="Your AI-Powered Startup Ecosystem"
             className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight lg:leading-tight"
+            animation="typewriter"
+            typewriterSpeed={70}
           />
           
           <AnimatedText
-            text="Get instant guidance, investment insights, and tailored strategies in seconds. Like having a world-class startup advisor available 24/7."
+            text="Get AI-driven insights, strategic tools, and networking opportunities. Guiding startups through every stage of growth."
             className="text-lg text-muted-foreground max-w-xl lg:mx-0 mx-auto"
             delay={300}
           />
@@ -111,13 +113,13 @@ const Hero: React.FC = () => {
               href="#cta" 
               className="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-full font-medium transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-primary/20"
             >
-              Try Insirra GPT Now
+              Join Insirra Forge
             </a>
             <button 
               onClick={scrollToFeatures}
               className="flex items-center justify-center gap-2 bg-secondary hover:bg-secondary/80 px-8 py-3 rounded-full font-medium transition-all duration-300 transform hover:scale-105 active:scale-95"
             >
-              See How It Works
+              Explore Features
               <ChevronDown className="h-4 w-4" />
             </button>
           </div>
