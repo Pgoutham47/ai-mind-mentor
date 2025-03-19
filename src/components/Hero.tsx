@@ -75,7 +75,6 @@ const Hero: React.FC = () => {
     
     setTimeout(typeNextChar, 1000);
     
-    // Add Konami code listener
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.keyCode === konamiCode[konamiIndex]) {
         const newIndex = konamiIndex + 1;
@@ -143,7 +142,6 @@ const Hero: React.FC = () => {
       }
     };
     
-    // Add floating buzzwords
     const generateBuzzwords = () => {
       const newBuzzwords = [];
       const words = ['VC', 'Pivot', 'Scale', 'MVP', 'SaaS', 'YC', 'Hustle', 'Exit', 'PMF', 'CAC', 'LTV', 'Unicorn', 'Runway'];
@@ -168,10 +166,8 @@ const Hero: React.FC = () => {
     const buzzwordInterval = setInterval(() => {
       setBuzzwords(prev => {
         return prev.map(word => {
-          // Move and decrease life
           const newLife = word.life - 1;
           if (newLife <= 0) {
-            // Respawn with new word
             const words = ['VC', 'Pivot', 'Scale', 'MVP', 'SaaS', 'YC', 'Hustle', 'Exit', 'PMF', 'CAC', 'LTV', 'Unicorn', 'Runway'];
             return {
               ...word,
@@ -227,7 +223,6 @@ const Hero: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
-  // New function to trigger retro mode
   const triggerRetroMode = () => {
     playGlitchSound();
     setShowRetro(true);
@@ -416,6 +411,15 @@ const Hero: React.FC = () => {
     }
   };
 
+  const handleAvatarHover = () => {
+    setIsRoastMode(prev => !prev);
+    playGlitchSound();
+  };
+
+  const triggerConfetti = () => {
+    playHoverSound();
+  };
+
   return (
     <section 
       ref={sceneRef}
@@ -428,7 +432,6 @@ const Hero: React.FC = () => {
         transform: `perspective(1000px) rotateX(${scrollProgress * 3}deg)`
       }}
     >
-      {/* TikTok-style progress bar */}
       <div className="fixed top-0 left-0 right-0 z-50 h-2 bg-black/20">
         <div 
           className="h-full bg-gradient-to-r from-[#FF00FF] via-[#00FFDD] to-[#FF00FF] bg-size-200 animate-pulse"
@@ -439,7 +442,6 @@ const Hero: React.FC = () => {
         </div>
       </div>
       
-      {/* Floating buzzwords */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {buzzwords.map((word) => (
           <div 
@@ -465,7 +467,6 @@ const Hero: React.FC = () => {
         ))}
       </div>
       
-      {/* Background Elements */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-[#00FFDD]/10 to-transparent" />
         <div 
@@ -477,11 +478,9 @@ const Hero: React.FC = () => {
           }} 
         />
         
-        {/* Glitch shader background */}
         <div className="absolute inset-0 z-0 overflow-hidden glitch-background pointer-events-none"></div>
       </div>
       
-      {/* Retro mode overlay */}
       {showRetro && (
         <div className="absolute inset-0 z-50 pointer-events-none overflow-hidden geocities-background">
           <div className="absolute top-5 left-5 animate-bounce h-20 w-20">
@@ -597,7 +596,6 @@ const Hero: React.FC = () => {
         </div>
         
         <div className="w-full lg:w-1/2 relative perspective preserve-3d">
-          {/* AI Avatar / Mentor */}
           <div 
             ref={orbRef}
             className={cn(
@@ -634,4 +632,16 @@ const Hero: React.FC = () => {
             {Array.from({length: 3}).map((_, i) => (
               <div 
                 key={i}
-                className="absolute text-xs font-mono text-white/80 bg-black/40 px-2 py-1 rounded-full transform -translate-x-1/2 -translate-y-1/2 backdrop-blur-sm
+                className="absolute text-xs font-mono text-white/80 bg-black/40 px-2 py-1 rounded-full transform -translate-x-1/2 -translate-y-1/2 backdrop-blur-sm"
+              >
+                {['🚀', '🔥', '💯', '🤖', '📈', '💸', '🦄', '🧠'][Math.floor(Math.random() * 8)]}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Hero;
