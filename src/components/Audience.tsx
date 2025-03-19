@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Rocket, Briefcase, LineChart, GraduationCap, CheckCircle, ArrowRight } from 'lucide-react';
+import { Rocket, Briefcase, LineChart, GraduationCap, CheckCircle, ArrowRight, Bot as BotIcon } from 'lucide-react';
 import AnimatedCard from './AnimatedCard';
 import AnimatedText from './AnimatedText';
 import { cn } from '@/lib/utils';
@@ -144,7 +144,7 @@ const Audience = () => {
             <AnimatedCard 
               key={index} 
               delay={audience.delay}
-              animation="card-up"
+              animation="fade-in"
             >
               <div 
                 className={cn(
@@ -274,7 +274,7 @@ const Audience = () => {
                     <div className="bg-card rounded-xl p-6 border border-border/50 shadow-inner">
                       <div className="flex items-center mb-4">
                         <div className="rounded-full bg-gradient-to-r from-primary/20 to-blue-600/20 p-2 mr-3">
-                          <Bot className="h-5 w-5 text-primary" />
+                          <BotIcon className="h-5 w-5 text-primary" />
                         </div>
                         <p className="font-medium text-lg">Insirra GPT Response:</p>
                       </div>
@@ -352,8 +352,8 @@ const Audience = () => {
       {/* Bottom gradient fade */}
       <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent"></div>
       
-      {/* Add some CSS animations */}
-      <style jsx global>{`
+      <style>
+        {`
         @keyframes float-y {
           0% { transform: translateY(0); }
           50% { transform: translateY(-100vh); }
@@ -384,7 +384,8 @@ const Audience = () => {
                             linear-gradient(90deg, rgba(59, 130, 246, 0.2) 1px, transparent 1px);
           background-size: 30px 30px;
         }
-      `}</style>
+        `}
+      </style>
     </section>
   );
 };

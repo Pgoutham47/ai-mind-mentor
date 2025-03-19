@@ -137,7 +137,7 @@ const Benefits = () => {
             <AnimatedCard 
               key={index} 
               delay={benefit.delay}
-              animation="card-up"
+              animation="fade-in"
             >
               <div 
                 className={cn(
