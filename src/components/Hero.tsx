@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from 'react';
 import { MessageSquare, ChevronDown, Zap, Sparkles, Star, Flame, Bot, Cpu, GitPullRequest, TrendingUp, Bomb } from 'lucide-react';
 import { cn } from '@/lib/utils';
