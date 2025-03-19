@@ -144,9 +144,9 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col relative">
-      {/* Background mesh effect */}
-      <div className="fixed inset-0 -z-10 overflow-hidden opacity-20 pointer-events-none">
+    <div className="min-h-screen flex flex-col relative dark:bg-gray-900">
+      {/* Background mesh effect - with dark mode support */}
+      <div className="fixed inset-0 -z-10 overflow-hidden opacity-20 dark:opacity-30 pointer-events-none">
         <div className="absolute top-0 left-0 right-0 h-screen" style={{
           background: 'radial-gradient(circle at 30% 20%, rgba(77, 171, 245, 0.15), transparent 40%), radial-gradient(circle at 70% 60%, rgba(114, 9, 183, 0.1), transparent 50%)',
           backgroundSize: '100% 100%'
@@ -213,6 +213,57 @@ const Index = () => {
       </main>
       
       <Footer />
+      
+      {/* Custom CSS for dark mode support */}
+      <style jsx global>{`
+        /* Dark mode adjustments */
+        :root {
+          color-scheme: light dark;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+          body {
+            background-color: #121212;
+            color: #f5f5f5;
+          }
+        }
+        
+        /* Ensures proper contrast in both modes */
+        .text-balance {
+          text-wrap: balance;
+        }
+        
+        /* Enhanced glitch effect */
+        .glitch-text {
+          position: relative;
+          display: inline-block;
+        }
+        
+        .glitch-text::before,
+        .glitch-text::after {
+          content: attr(data-text);
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          clip: rect(0, 0, 0, 0);
+        }
+        
+        .glitch-text:hover::before {
+          clip: rect(0, 900px, 0, 0);
+          animation: glitch 0.3s linear alternate-reverse infinite;
+          left: 2px;
+          text-shadow: -1px 0 #FF00FF;
+        }
+        
+        .glitch-text:hover::after {
+          clip: rect(0, 900px, 0, 0);
+          animation: glitch 0.5s linear alternate-reverse infinite;
+          left: -2px;
+          text-shadow: 1px 0 #00FFDD;
+        }
+      `}</style>
     </div>
   );
 };

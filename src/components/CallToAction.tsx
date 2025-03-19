@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import { ArrowRight, Play, Sparkles, Zap, Star, Bot, Cpu, Flame, Trophy } from 'lucide-react';
 import AnimatedText from './AnimatedText';
@@ -11,7 +10,6 @@ const CallToAction = () => {
   const [showEasterEgg, setShowEasterEgg] = useState(false);
   const [isGlitching, setIsGlitching] = useState(false);
   
-  // Mouse tracking for parallax effects
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current) return;
@@ -27,7 +25,6 @@ const CallToAction = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
   
-  // Sound effects
   const playBtnSound = () => {
     try {
       const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
@@ -53,13 +50,11 @@ const CallToAction = () => {
     }
   };
 
-  // Glitch effect handler
   const handleGlitchEffect = () => {
     setIsGlitching(true);
     setTimeout(() => setIsGlitching(false), 1500);
   };
   
-  // Handle OnlySturtups Easter Egg
   const handleSpecialClick = () => {
     setClickCount(prev => prev + 1);
     
@@ -103,12 +98,11 @@ const CallToAction = () => {
     <section 
       id="cta" 
       ref={containerRef}
-      className={`section relative overflow-hidden text-white perspective preserve-3d ${isGlitching ? 'glitch-effect' : ''}`}
+      className={`section relative overflow-hidden text-white dark:text-white perspective preserve-3d ${isGlitching ? 'glitch-effect' : ''}`}
       style={{
         background: 'linear-gradient(to bottom right, #111111, #222222)',
       }}
     >
-      {/* Background Elements */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-0 left-0 right-0 h-40 bg-[radial-gradient(circle_at_top,rgba(0,255,221,0.1),transparent)]" />
         <div 
@@ -119,7 +113,6 @@ const CallToAction = () => {
         />
       </div>
       
-      {/* Animated Particles */}
       <div className="absolute inset-0 -z-5 overflow-hidden">
         {Array.from({ length: 30 }).map((_, i) => (
           <div 
@@ -138,16 +131,13 @@ const CallToAction = () => {
         ))}
       </div>
       
-      {/* Holographic Grid Lines */}
       <div className="absolute inset-0 -z-5 holographic-overlay opacity-40 pointer-events-none">
         <div className="holographic-lines"></div>
       </div>
       
-      {/* Meme-inspired diagonal elements */}
       <div className="absolute top-0 left-0 w-full h-24 bg-[#00FFDD]/5 transform -skew-y-6"></div>
       <div className="absolute bottom-0 right-0 w-full h-24 bg-[#FF00FF]/5 transform skew-y-6"></div>
       
-      {/* Only Startups Easter Egg */}
       {showEasterEgg && (
         <div className="absolute inset-0 z-50 bg-gradient-to-br from-[#300A24] to-[#170312] flex items-center justify-center">
           <div className="max-w-md text-center p-6">
@@ -180,7 +170,7 @@ const CallToAction = () => {
       >
         <div className="max-w-4xl mx-auto text-center">
           <span 
-            className="inline-block px-4 py-1 rounded-full bg-gradient-to-r from-[#00FFDD]/20 to-[#FF00FF]/20 text-white text-sm font-medium mb-6 backdrop-blur-sm border border-white/10 transform -rotate-1 cursor-pointer"
+            className="inline-block px-4 py-1 rounded-full bg-gradient-to-r from-[#00FFDD]/20 to-[#FF00FF]/20 text-white dark:text-white text-sm font-medium mb-6 backdrop-blur-sm border border-white/10 transform -rotate-1 cursor-pointer"
             onClick={handleGlitchEffect}
           >
             <Sparkles className="h-3 w-3 inline mr-1 text-[#00FFDD]" /> 
@@ -190,13 +180,13 @@ const CallToAction = () => {
           <div className="transform rotate-1">
             <AnimatedText
               text="Your Startup, Supercharged by AI"
-              className="text-4xl md:text-5xl font-bold mb-6 text-balance bg-clip-text text-transparent bg-gradient-to-r from-[#00FFDD] to-[#FF00FF]"
+              className="text-4xl md:text-5xl font-bold mb-6 text-balance bg-clip-text text-transparent bg-gradient-to-r from-[#00FFDD] to-[#FF00FF] dark:from-[#00FFDD] dark:to-[#FF00FF]"
               animation="glitch"
               glowColor="rgba(0, 255, 221, 0.8)"
             />
           </div>
           
-          <p className="text-lg md:text-xl mb-10 text-white/90 max-w-2xl mx-auto transform -rotate-1 font-glitch">
+          <p className="text-lg md:text-xl mb-10 text-white/90 dark:text-white/90 max-w-2xl mx-auto transform -rotate-1 font-glitch">
             Join thousands of founders who are leveraging AI to make better decisions, 
             secure funding, and build successful companies with the Insirra Forge ecosystem.
           </p>
@@ -204,7 +194,7 @@ const CallToAction = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 
               href="#" 
-              className="bg-gradient-to-r from-[#FF00FF] to-[#00FFDD] text-white hover:bg-white/90 px-8 py-3 rounded-full font-medium transition-all duration-300 transform hover:scale-110 active:scale-95 shadow-lg flex items-center justify-center gap-2 min-w-44 relative overflow-hidden group"
+              className="bg-gradient-to-r from-[#FF00FF] to-[#00FFDD] text-white dark:text-white hover:bg-white/90 px-8 py-3 rounded-full font-medium transition-all duration-300 transform hover:scale-110 active:scale-95 shadow-lg flex items-center justify-center gap-2 min-w-44 relative overflow-hidden group"
               onMouseEnter={() => { setHoverButton('join'); playBtnSound(); }}
               onMouseLeave={() => setHoverButton('')}
             >
@@ -217,7 +207,6 @@ const CallToAction = () => {
               </span>
               <span className="absolute inset-0 bg-gradient-to-r from-[#00FFDD] via-[#FF00FF] to-[#00FFDD] bg-[length:200%_100%] animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity"></span>
               
-              {/* Confetti effect */}
               {hoverButton === 'join' && (
                 <div className="absolute inset-0 pointer-events-none">
                   {Array.from({length: 15}).map((_, i) => (
@@ -240,7 +229,7 @@ const CallToAction = () => {
             
             <a 
               href="#" 
-              className="bg-transparent hover:bg-white/10 border border-[#00FFDD] hover:border-[#FF00FF] px-8 py-3 rounded-full font-medium transition-all duration-300 transform hover:scale-110 active:scale-95 flex items-center justify-center gap-2 min-w-44 relative overflow-hidden group backdrop-blur-sm"
+              className="bg-transparent hover:bg-white/10 border border-[#00FFDD] hover:border-[#FF00FF] text-white dark:text-white px-8 py-3 rounded-full font-medium transition-all duration-300 transform hover:scale-110 active:scale-95 flex items-center justify-center gap-2 min-w-44 relative overflow-hidden group backdrop-blur-sm"
               onMouseEnter={() => { setHoverButton('watch'); playBtnSound(); }}
               onMouseLeave={() => setHoverButton('')}
             >
@@ -262,7 +251,7 @@ const CallToAction = () => {
           </div>
           
           <p 
-            className="mt-8 text-sm text-white/70 font-mono animate-pulse cursor-pointer" 
+            className="mt-8 text-sm text-white/70 dark:text-white/70 font-mono animate-pulse cursor-pointer" 
             onClick={handleSpecialClick}
           >
             <span className="relative group">
@@ -273,8 +262,7 @@ const CallToAction = () => {
         </div>
       </div>
       
-      {/* TikTok-style side comments */}
-      <div className="absolute right-4 top-1/3 max-w-[150px] bg-black/60 p-3 rounded-lg border border-[#FF00FF]/30 text-white transform rotate-3 text-sm">
+      <div className="absolute right-4 top-1/3 max-w-[150px] bg-black/60 dark:bg-black/80 p-3 rounded-lg border border-[#FF00FF]/30 text-white transform rotate-3 text-sm">
         <div className="flex items-center gap-1 mb-1">
           <div className="h-5 w-5 rounded-full bg-gradient-to-br from-[#00FFDD] to-[#FF00FF]"></div>
           <span className="font-bold">@hustleBro</span>
@@ -285,7 +273,7 @@ const CallToAction = () => {
         </div>
       </div>
       
-      <div className="absolute left-4 bottom-1/3 max-w-[150px] bg-black/60 p-3 rounded-lg border border-[#00FFDD]/30 text-white transform -rotate-2 text-sm">
+      <div className="absolute left-4 bottom-1/3 max-w-[150px] bg-black/60 dark:bg-black/80 p-3 rounded-lg border border-[#00FFDD]/30 text-white transform -rotate-2 text-sm">
         <div className="flex items-center gap-1 mb-1">
           <div className="h-5 w-5 rounded-full bg-gradient-to-tr from-[#FF00FF] to-[#00FFDD]"></div>
           <span className="font-bold">@vc_girlboss</span>

@@ -1,0 +1,249 @@
+
+/* Gen Z-inspired animations for the hero redesign */
+
+/* Cyberpunk glow effects */
+.cyber-glow {
+  box-shadow: 0 0 10px rgba(0, 255, 221, 0.7), 0 0 20px rgba(255, 0, 255, 0.4);
+  animation: cyber-pulse 3s infinite alternate;
+}
+
+@keyframes cyber-pulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(0, 255, 221, 0.7), 0 0 20px rgba(255, 0, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(0, 255, 221, 0.9), 0 0 30px rgba(255, 0, 255, 0.6);
+  }
+}
+
+/* Glitch text animations */
+.text-glitch {
+  position: relative;
+  animation: text-glitch-skew 3s infinite alternate-reverse;
+}
+
+.text-glitch::before,
+.text-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.text-glitch::before {
+  left: 2px;
+  text-shadow: -2px 0 #00FFDD;
+  clip: rect(44px, 450px, 56px, 0);
+  animation: text-glitch-anim 5s infinite linear alternate-reverse;
+}
+
+.text-glitch::after {
+  left: -2px;
+  text-shadow: -2px 0 #FF00FF;
+  clip: rect(44px, 450px, 56px, 0);
+  animation: text-glitch-anim2 5s infinite linear alternate-reverse;
+}
+
+@keyframes text-glitch-anim {
+  0% {
+    clip: rect(24px, 550px, 90px, 0);
+    transform: skew(0.4deg);
+  }
+  20% {
+    clip: rect(45px, 550px, 50px, 0);
+    transform: skew(0.8deg);
+  }
+  40% {
+    clip: rect(12px, 550px, 59px, 0);
+    transform: skew(-0.4deg);
+  }
+  60% {
+    clip: rect(78px, 550px, 73px, 0);
+    transform: skew(0.6deg);
+  }
+  80% {
+    clip: rect(33px, 550px, 140px, 0);
+    transform: skew(-0.2deg);
+  }
+  100% {
+    clip: rect(53px, 550px, 116px, 0);
+    transform: skew(0.8deg);
+  }
+}
+
+@keyframes text-glitch-anim2 {
+  0% {
+    clip: rect(76px, 550px, 100px, 0);
+    transform: skew(0.4deg);
+  }
+  20% {
+    clip: rect(20px, 550px, 30px, 0);
+    transform: skew(-0.8deg);
+  }
+  40% {
+    clip: rect(90px, 550px, 140px, 0);
+    transform: skew(0.2deg);
+  }
+  60% {
+    clip: rect(15px, 550px, 60px, 0);
+    transform: skew(0.5deg);
+  }
+  80% {
+    clip: rect(24px, 550px, 78px, 0);
+    transform: skew(-0.4deg);
+  }
+  100% {
+    clip: rect(60px, 550px, 97px, 0);
+    transform: skew(-0.1deg);
+  }
+}
+
+@keyframes text-glitch-skew {
+  0% {
+    transform: skew(0deg);
+  }
+  10% {
+    transform: skew(-0.5deg);
+  }
+  20% {
+    transform: skew(0.8deg);
+  }
+  30% {
+    transform: skew(0deg);
+  }
+  40% {
+    transform: skew(-0.3deg);
+  }
+  50% {
+    transform: skew(0.5deg);
+  }
+  60% {
+    transform: skew(0deg);
+  }
+  70% {
+    transform: skew(0.7deg);
+  }
+  80% {
+    transform: skew(-0.4deg);
+  }
+  90% {
+    transform: skew(0.2deg);
+  }
+  100% {
+    transform: skew(0deg);
+  }
+}
+
+/* Emoji burst animation */
+@keyframes emoji-burst {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    transform: scale(1.5) rotate(30deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0) rotate(90deg) translate(40px, -40px);
+    opacity: 0;
+  }
+}
+
+/* TikTok-style shimmer for buttons */
+.tiktok-shimmer {
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Morphing blob for buttons */
+.morphing-blob {
+  --size: 20rem;
+  height: var(--size);
+  width: var(--size);
+  background: linear-gradient(to right, #FF00FF, #00FFDD);
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  animation: morphing 10s infinite;
+  filter: blur(40px);
+  opacity: 0.7;
+}
+
+@keyframes morphing {
+  0% {
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  }
+  25% {
+    border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%;
+  }
+  50% {
+    border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+  }
+  75% {
+    border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%;
+  }
+  100% {
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  }
+}
+
+/* CRT scan effect */
+.crt-scan {
+  position: relative;
+  overflow: hidden;
+}
+
+.crt-scan::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(to bottom, transparent, rgba(0, 255, 221, 0.2) 50%, transparent 100%);
+  height: 10px;
+  width: 100%;
+  animation: scan 3s linear infinite;
+}
+
+@keyframes scan {
+  0% {
+    top: -10%;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+/* Improved dark mode support */
+@media (prefers-color-scheme: dark) {
+  .cyber-glow {
+    box-shadow: 0 0 15px rgba(0, 255, 221, 0.8), 0 0 30px rgba(255, 0, 255, 0.5);
+  }
+  
+  @keyframes cyber-pulse {
+    0%, 100% {
+      box-shadow: 0 0 15px rgba(0, 255, 221, 0.8), 0 0 30px rgba(255, 0, 255, 0.5);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(0, 255, 221, 1), 0 0 40px rgba(255, 0, 255, 0.7);
+    }
+  }
+}
