@@ -1,12 +1,15 @@
 
 import React, { useRef, useEffect, useState } from 'react';
-import { ArrowRight, Play, Sparkles, Zap, Star } from 'lucide-react';
+import { ArrowRight, Play, Sparkles, Zap, Star, Bot, Cpu, Flame, Trophy } from 'lucide-react';
 import AnimatedText from './AnimatedText';
 
 const CallToAction = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0.5, y: 0.5 });
   const [hoverButton, setHoverButton] = useState('');
+  const [clickCount, setClickCount] = useState(0);
+  const [showEasterEgg, setShowEasterEgg] = useState(false);
+  const [isGlitching, setIsGlitching] = useState(false);
   
   // Mouse tracking for parallax effects
   useEffect(() => {
@@ -49,12 +52,61 @@ const CallToAction = () => {
       console.log('Audio context not supported or user interaction required');
     }
   };
+
+  // Glitch effect handler
+  const handleGlitchEffect = () => {
+    setIsGlitching(true);
+    setTimeout(() => setIsGlitching(false), 1500);
+  };
+  
+  // Handle OnlySturtups Easter Egg
+  const handleSpecialClick = () => {
+    setClickCount(prev => prev + 1);
+    
+    if (clickCount >= 4) {
+      setShowEasterEgg(true);
+      playGlitchSound();
+      
+      setTimeout(() => {
+        setShowEasterEgg(false);
+        setClickCount(0);
+      }, 5000);
+    }
+  };
+  
+  const playGlitchSound = () => {
+    try {
+      const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+      const audioContext = new AudioContext();
+      
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.type = 'sawtooth';
+      oscillator.frequency.setValueAtTime(100, audioContext.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(500, audioContext.currentTime + 0.2);
+      
+      gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.3);
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + 0.3);
+    } catch (e) {
+      console.log('Audio context not supported or user interaction required');
+    }
+  };
   
   return (
     <section 
       id="cta" 
       ref={containerRef}
-      className="section bg-gradient-to-br from-[#111111] to-[#222222] relative overflow-hidden text-white perspective preserve-3d"
+      className={`section relative overflow-hidden text-white perspective preserve-3d ${isGlitching ? 'glitch-effect' : ''}`}
+      style={{
+        background: 'linear-gradient(to bottom right, #111111, #222222)',
+      }}
     >
       {/* Background Elements */}
       <div className="absolute inset-0 -z-10">
@@ -95,6 +147,31 @@ const CallToAction = () => {
       <div className="absolute top-0 left-0 w-full h-24 bg-[#00FFDD]/5 transform -skew-y-6"></div>
       <div className="absolute bottom-0 right-0 w-full h-24 bg-[#FF00FF]/5 transform skew-y-6"></div>
       
+      {/* Only Startups Easter Egg */}
+      {showEasterEgg && (
+        <div className="absolute inset-0 z-50 bg-gradient-to-br from-[#300A24] to-[#170312] flex items-center justify-center">
+          <div className="max-w-md text-center p-6">
+            <div className="text-3xl font-bold text-[#FF00FF] mb-4 flex items-center justify-center gap-2">
+              <Trophy className="h-8 w-8 text-[#FFD700]" />
+              <span>OnlyStartups</span>
+              <Trophy className="h-8 w-8 text-[#FFD700]" />
+            </div>
+            <p className="text-[#00FFDD] mb-6">Premium content for the most dedicated hustlers only!</p>
+            <div className="flex flex-wrap gap-4 justify-center">
+              {["Growth Hacking Secrets", "VC Dating Tips", "Stealth Mode Techniques", "The 10X Mindset"].map((plan, i) => (
+                <div key={i} className="bg-black/40 p-4 rounded-lg border border-[#FF00FF]/30 w-40">
+                  <div className="text-xl font-bold mb-2 text-white">{plan}</div>
+                  <div className="text-[#00FFDD] font-mono">$69.42/mo</div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 text-white/60 text-xs">
+              JK! This is a parody. Keep hustling for free!
+            </div>
+          </div>
+        </div>
+      )}
+      
       <div 
         className="container mx-auto px-4 relative z-10 py-24"
         style={{
@@ -102,7 +179,10 @@ const CallToAction = () => {
         }}
       >
         <div className="max-w-4xl mx-auto text-center">
-          <span className="inline-block px-4 py-1 rounded-full bg-gradient-to-r from-[#00FFDD]/20 to-[#FF00FF]/20 text-white text-sm font-medium mb-6 backdrop-blur-sm border border-white/10 transform -rotate-1">
+          <span 
+            className="inline-block px-4 py-1 rounded-full bg-gradient-to-r from-[#00FFDD]/20 to-[#FF00FF]/20 text-white text-sm font-medium mb-6 backdrop-blur-sm border border-white/10 transform -rotate-1 cursor-pointer"
+            onClick={handleGlitchEffect}
+          >
             <Sparkles className="h-3 w-3 inline mr-1 text-[#00FFDD]" /> 
             Start Your Journey Today
           </span>
@@ -116,7 +196,7 @@ const CallToAction = () => {
             />
           </div>
           
-          <p className="text-lg md:text-xl mb-10 text-white/90 max-w-2xl mx-auto transform -rotate-1">
+          <p className="text-lg md:text-xl mb-10 text-white/90 max-w-2xl mx-auto transform -rotate-1 font-glitch">
             Join thousands of founders who are leveraging AI to make better decisions, 
             secure funding, and build successful companies with the Insirra Forge ecosystem.
           </p>
@@ -181,9 +261,38 @@ const CallToAction = () => {
             </a>
           </div>
           
-          <p className="mt-8 text-sm text-white/70 font-mono animate-pulse">
-            No credit card required. Cancel anytime.
+          <p 
+            className="mt-8 text-sm text-white/70 font-mono animate-pulse cursor-pointer" 
+            onClick={handleSpecialClick}
+          >
+            <span className="relative group">
+              No credit card required. <span className="text-[#00FFDD] group-hover:text-[#FF00FF] transition-colors">Cancel anytime.</span>
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#FF00FF] group-hover:w-full transition-all"></span>
+            </span>
           </p>
+        </div>
+      </div>
+      
+      {/* TikTok-style side comments */}
+      <div className="absolute right-4 top-1/3 max-w-[150px] bg-black/60 p-3 rounded-lg border border-[#FF00FF]/30 text-white transform rotate-3 text-sm">
+        <div className="flex items-center gap-1 mb-1">
+          <div className="h-5 w-5 rounded-full bg-gradient-to-br from-[#00FFDD] to-[#FF00FF]"></div>
+          <span className="font-bold">@hustleBro</span>
+        </div>
+        <p>omg this AI helped me raise 500k in 2 weeks 🔥</p>
+        <div className="flex items-center gap-2 mt-2 text-xs">
+          <Flame className="h-3 w-3" /> 1.2k
+        </div>
+      </div>
+      
+      <div className="absolute left-4 bottom-1/3 max-w-[150px] bg-black/60 p-3 rounded-lg border border-[#00FFDD]/30 text-white transform -rotate-2 text-sm">
+        <div className="flex items-center gap-1 mb-1">
+          <div className="h-5 w-5 rounded-full bg-gradient-to-tr from-[#FF00FF] to-[#00FFDD]"></div>
+          <span className="font-bold">@vc_girlboss</span>
+        </div>
+        <p>I use this to vet all my deals now lol</p>
+        <div className="flex items-center gap-2 mt-2 text-xs">
+          <Flame className="h-3 w-3" /> 943
         </div>
       </div>
     </section>

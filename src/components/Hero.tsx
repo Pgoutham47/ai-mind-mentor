@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { MessageSquare, ChevronDown, Zap, Sparkles, Star } from 'lucide-react';
+import { MessageSquare, ChevronDown, Zap, Sparkles, Star, Flame, Bot, Cpu, GitPullRequest, TrendingUp, Bomb } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import AnimatedText from './AnimatedText';
 
@@ -12,9 +12,16 @@ const Hero: React.FC = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [scrollProgress, setScrollProgress] = useState(0);
   const [clickCount, setClickCount] = useState(0);
+  
+  const [buzzwords, setBuzzwords] = useState<Array<{id: number, text: string, x: number, y: number, scale: number, life: number, maxLife: number}>>([]);
+  const [unicornProgress, setUnicornProgress] = useState(0);
+  const [isRoastMode, setIsRoastMode] = useState(false);
   const [showEasterEgg, setShowEasterEgg] = useState(false);
   const [hoverButton, setHoverButton] = useState('');
   const [morphState, setMorphState] = useState(0);
+  const [konamiIndex, setKonamiIndex] = useState(0);
+  const [showRetro, setShowRetro] = useState(false);
+  const konamiCode = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65]; // up up down down left right left right b a
   
   useEffect(() => {
     const messages = [
@@ -68,8 +75,24 @@ const Hero: React.FC = () => {
     
     setTimeout(typeNextChar, 1000);
     
-    return () => {};
-  }, []);
+    // Add Konami code listener
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.keyCode === konamiCode[konamiIndex]) {
+        const newIndex = konamiIndex + 1;
+        setKonamiIndex(newIndex);
+        
+        if (newIndex === konamiCode.length) {
+          triggerRetroMode();
+          setKonamiIndex(0);
+        }
+      } else {
+        setKonamiIndex(0);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [konamiIndex]);
   
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -120,9 +143,72 @@ const Hero: React.FC = () => {
       }
     };
     
+    // Add floating buzzwords
+    const generateBuzzwords = () => {
+      const newBuzzwords = [];
+      const words = ['VC', 'Pivot', 'Scale', 'MVP', 'SaaS', 'YC', 'Hustle', 'Exit', 'PMF', 'CAC', 'LTV', 'Unicorn', 'Runway'];
+      
+      for (let i = 0; i < 10; i++) {
+        newBuzzwords.push({
+          id: i,
+          text: words[Math.floor(Math.random() * words.length)],
+          x: Math.random() * 100,
+          y: Math.random() * 100,
+          scale: 0.5 + Math.random() * 1.5,
+          life: 100,
+          maxLife: 100 + Math.random() * 300
+        });
+      }
+      
+      setBuzzwords(newBuzzwords);
+    };
+    
+    generateBuzzwords();
+    
+    const buzzwordInterval = setInterval(() => {
+      setBuzzwords(prev => {
+        return prev.map(word => {
+          // Move and decrease life
+          const newLife = word.life - 1;
+          if (newLife <= 0) {
+            // Respawn with new word
+            const words = ['VC', 'Pivot', 'Scale', 'MVP', 'SaaS', 'YC', 'Hustle', 'Exit', 'PMF', 'CAC', 'LTV', 'Unicorn', 'Runway'];
+            return {
+              ...word,
+              text: words[Math.floor(Math.random() * words.length)],
+              x: Math.random() * 100,
+              y: Math.random() * 100,
+              scale: 0.5 + Math.random() * 1.5,
+              life: word.maxLife,
+            };
+          }
+          
+          return {
+            ...word,
+            x: word.x + (Math.random() * 0.6 - 0.3), 
+            y: word.y + (Math.random() * 0.4 - 0.1),
+            life: newLife
+          };
+        });
+      });
+    }, 50);
+    
+    window.addEventListener('mousemove', handleMouseMove);
+    
+    return () => {
+      clearInterval(buzzwordInterval);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+  
+  useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.pageYOffset;
       const windowHeight = window.innerHeight;
+      const docHeight = document.body.offsetHeight;
+      const scrollPercentage = (scrollTop / (docHeight - windowHeight)) * 100;
+      setUnicornProgress(Math.min(scrollPercentage * 1.5, 100));
+      
       const progress = Math.min(scrollTop / windowHeight, 1);
       setScrollProgress(progress);
       
@@ -137,14 +223,21 @@ const Hero: React.FC = () => {
       }
     };
     
-    window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('scroll', handleScroll);
-    
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+  
+  // New function to trigger retro mode
+  const triggerRetroMode = () => {
+    playGlitchSound();
+    setShowRetro(true);
+    document.body.classList.add('retro-mode');
+    
+    setTimeout(() => {
+      setShowRetro(false);
+      document.body.classList.remove('retro-mode');
+    }, 10000);
+  };
   
   useEffect(() => {
     if (!particlesRef.current) return;
@@ -326,36 +419,54 @@ const Hero: React.FC = () => {
   return (
     <section 
       ref={sceneRef}
-      className="relative min-h-screen pt-32 pb-16 overflow-hidden flex flex-col justify-center items-center"
+      className={cn(
+        "relative min-h-screen pt-32 pb-16 overflow-hidden flex flex-col justify-center items-center",
+        showRetro ? "retro-geocities" : ""
+      )}
       style={{ 
         transition: 'background 0.5s ease-out',
         transform: `perspective(1000px) rotateX(${scrollProgress * 3}deg)`
       }}
     >
-      <div className="absolute inset-0 -z-10 overflow-hidden perspective preserve-3d">
-        <div ref={particlesRef} className="absolute inset-0 pointer-events-none" />
-        
+      {/* TikTok-style progress bar */}
+      <div className="fixed top-0 left-0 right-0 z-50 h-2 bg-black/20">
         <div 
-          className="absolute inset-0 procedural-background"
-          style={{ 
-            opacity: 0.15 + scrollProgress * 0.3,
-            filter: `hue-rotate(${scrollProgress * 180}deg) blur(${scrollProgress * 2}px)`
-          }}
+          className="h-full bg-gradient-to-r from-[#FF00FF] via-[#00FFDD] to-[#FF00FF] bg-size-200 animate-pulse"
+          style={{ width: `${unicornProgress}%`, transition: 'width 0.3s ease-out' }}
         ></div>
-        
-        <div 
-          className="absolute inset-0 holographic-overlay pointer-events-none"
-          style={{ 
-            opacity: 0.2 + scrollProgress * 0.4,
-            transform: `translateZ(${50 - scrollProgress * 100}px)`
-          }}
-        >
-          <div className="holographic-lines" style={{ 
-            backgroundSize: `${100 + scrollProgress * 200}px ${10 + scrollProgress * 20}px`
-          }}></div>
-          <div className="holographic-glow"></div>
+        <div className="absolute right-4 -bottom-6 text-xs font-mono bg-black/70 text-[#00FFDD] px-2 py-1 rounded-lg">
+          Leveling Up Your Hustle: {Math.floor(unicornProgress)}% to Unicorn Status <Flame className="inline-block h-3 w-3 text-orange-500" />
         </div>
-        
+      </div>
+      
+      {/* Floating buzzwords */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {buzzwords.map((word) => (
+          <div 
+            key={word.id}
+            className={`absolute font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#FF00FF] to-[#00FFDD] mix-blend-screen pointer-events-auto cursor-pointer transition-all`}
+            style={{
+              left: `${word.x}%`,
+              top: `${word.y}%`,
+              transform: `scale(${word.scale}) rotate(${(word.id * 10) % 360}deg)`,
+              fontSize: `${1 + word.scale}rem`,
+              opacity: word.life / word.maxLife,
+              textShadow: '0 0 15px rgba(0, 255, 221, 0.8)'
+            }}
+            onClick={() => {
+              setBuzzwords(prev => 
+                prev.map(b => b.id === word.id ? {...b, life: 0} : b)
+              );
+              playGlitchSound();
+            }}
+          >
+            {word.text}
+          </div>
+        ))}
+      </div>
+      
+      {/* Background Elements */}
+      <div className="absolute inset-0 -z-10">
         <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-[#00FFDD]/10 to-transparent" />
         <div 
           className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full bg-[#FF00FF]/10 blur-3xl transform transition-transform"
@@ -365,12 +476,43 @@ const Hero: React.FC = () => {
             filter: `hue-rotate(${scrollProgress * 360}deg)`
           }} 
         />
+        
+        {/* Glitch shader background */}
+        <div className="absolute inset-0 z-0 overflow-hidden glitch-background pointer-events-none"></div>
       </div>
       
+      {/* Retro mode overlay */}
+      {showRetro && (
+        <div className="absolute inset-0 z-50 pointer-events-none overflow-hidden geocities-background">
+          <div className="absolute top-5 left-5 animate-bounce h-20 w-20">
+            <img src="https://web.archive.org/web/20091026220832/http://www.geocities.com/Area51/Cavern/2686/dancing_baby.gif" alt="Dancing baby" />
+          </div>
+          <div className="absolute top-5 right-5 animate-float h-20 w-20">
+            <img src="https://web.archive.org/web/20091026220832/http://www.geocities.com/Area51/Cavern/2686/flamingline.gif" alt="Flaming line" />
+          </div>
+          <div className="absolute bottom-5 left-5 h-20 w-20">
+            <img src="https://web.archive.org/web/20091026220832/http://www.geocities.com/Area51/Cavern/2686/construction.gif" alt="Under construction" />
+          </div>
+          <div className="absolute bottom-5 right-5 animate-pulse h-20 w-20">
+            <img src="https://web.archive.org/web/20091026220832/http://www.geocities.com/Area51/Cavern/2686/noframes.gif" alt="No frames" />
+          </div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center p-6 bg-yellow-300 border-4 border-black rotate-3 shadow-[8px_8px_0_0_rgba(0,0,0,1)]">
+              <h2 className="text-2xl font-bold text-blue-700 mb-3 blink"><marquee>WELCOME TO MY STARTUP!!!</marquee></h2>
+              <p className="text-red-600 font-comic">This page is best viewed in NETSCAPE NAVIGATOR at 800x600 resolution!!</p>
+              <div className="mt-4">
+                <img src="https://web.archive.org/web/20091027120212/http://www.geocities.com/Area51/Corridor/8611/ie.gif" alt="Netscape" className="inline-block h-10" />
+              </div>
+              <div className="mt-4 visitor-counter p-2 bg-black text-green-400 font-mono">
+                Visitors: 0000001337
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <div className="container mx-auto px-4 max-w-7xl flex flex-col lg:flex-row items-center gap-12 lg:gap-24 relative z-10">
-        <div className="w-full lg:w-1/2 space-y-6 text-center lg:text-left" style={{ 
-          transform: `rotate(-${Math.sin(scrollProgress * Math.PI) * 5}deg)` 
-        }}>
+        <div className="w-full lg:w-1/2 space-y-6 text-center lg:text-left transform -rotate-3 glass-card p-6 rounded-lg backdrop-blur-md border-2 border-[#00FFDD]/50 shadow-xl shadow-[#FF00FF]/20"> 
           <div
             ref={logoRef}
             onClick={handleLogoClick}
@@ -380,11 +522,10 @@ const Hero: React.FC = () => {
             )}
           >
             <span className="animate-pulse mr-2 h-2 w-2 rounded-full bg-[#FF00FF]"></span>
-            <span className="relative">
-              Insirra Forge - 
-              <span className="ml-1 font-bold">
-                Startup<span className="text-[#FF00FF]">::boost()</span>
-              </span>
+            <span className="relative font-mono">
+              <GitPullRequest className="h-4 w-4 inline mr-1" />
+              Insirra Forge 
+              <span className="ml-1 font-bold text-[#FF00FF]">v4.20.69</span>
               <span className="absolute top-0 left-0 w-full h-full glitch-overlay opacity-0 group-hover:opacity-100"></span>
             </span>
           </div>
@@ -392,7 +533,7 @@ const Hero: React.FC = () => {
           <div className="overflow-hidden">
             <AnimatedText 
               text="Your AI-Powered Startup Ecosystem"
-              className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight lg:leading-tight glitch-text transform -skew-x-2"
+              className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight lg:leading-tight glitch-text transform -skew-x-2 font-vhs"
               animation="glitch"
               glowColor="rgba(0, 255, 221, 0.7)"
             />
@@ -400,7 +541,7 @@ const Hero: React.FC = () => {
           
           <AnimatedText
             text="Get AI-driven insights, strategic tools, and networking opportunities. Guiding startups through every stage of growth."
-            className="text-lg text-muted-foreground max-w-xl lg:mx-0 mx-auto transform -skew-x-2"
+            className="text-lg text-[#00FFDD] max-w-xl lg:mx-0 mx-auto transform -skew-x-2 font-glitch"
             animation="typewriter"
             typewriterSpeed={20}
           />
@@ -411,9 +552,10 @@ const Hero: React.FC = () => {
               className="hero-cta-button bg-gradient-to-r from-[#FF00FF] to-[#00FFDD] text-white px-8 py-3 rounded-full font-medium transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg hover:shadow-[#FF00FF]/20 relative overflow-hidden group"
               onMouseEnter={() => { setHoverButton('join'); playHoverSound(); }}
               onMouseLeave={() => setHoverButton('')}
+              onClick={triggerConfetti}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
-                <span>{hoverButton === 'join' ? "Let's Go Viral" : "Join Insirra Forge"}</span>
+                <span className="font-extrabold">{hoverButton === 'join' ? "Let's Go Viral" : "Join Insirra Forge"}</span>
                 {hoverButton === 'join' && <Star className="h-4 w-4 animate-spin" />}
               </span>
               <span className="absolute inset-0 bg-gradient-to-r from-[#00FFDD] via-[#FF00FF] to-[#00FFDD] bg-[length:200%_100%] animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity"></span>
@@ -422,7 +564,7 @@ const Hero: React.FC = () => {
                 {hoverButton === 'join' && Array.from({length: 10}).map((_, i) => (
                   <div
                     key={i}
-                    className="absolute text-sm"
+                    className="absolute text-xl"
                     style={{
                       left: `${Math.random() * 100}%`,
                       top: `${Math.random() * 100}%`,
@@ -430,7 +572,7 @@ const Hero: React.FC = () => {
                       animationDelay: `${Math.random() * 0.3}s`
                     }}
                   >
-                    {['🚀', '🔥', '💯', '🤖', '📈'][Math.floor(Math.random() * 5)]}
+                    {['🚀', '🔥', '💯', '🤖', '📈', '💸', '🦄', '🧠'][Math.floor(Math.random() * 8)]}
                   </div>
                 ))}
               </div>
@@ -443,7 +585,7 @@ const Hero: React.FC = () => {
               onMouseLeave={() => setHoverButton('')}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
-                <span>Explore Features</span>
+                <span className="font-extrabold">Explore Features</span>
                 {hoverButton === 'explore' ? 
                   <Sparkles className="h-4 w-4 text-[#00FFDD] animate-pulse" /> : 
                   <ChevronDown className="h-4 w-4" />
@@ -455,6 +597,7 @@ const Hero: React.FC = () => {
         </div>
         
         <div className="w-full lg:w-1/2 relative perspective preserve-3d">
+          {/* AI Avatar / Mentor */}
           <div 
             ref={orbRef}
             className={cn(
@@ -467,91 +610,28 @@ const Hero: React.FC = () => {
               boxShadow: '0 0 30px 10px rgba(0, 255, 221, 0.2), 0 0 100px 20px rgba(255, 0, 255, 0.1)',
               transition: 'transform 0.1s ease-out, box-shadow 0.3s ease-out, border-radius 0.5s ease'
             }}
+            onMouseEnter={handleAvatarHover}
           >
             <div className="absolute inset-2 bg-gradient-to-br from-[#00FFDD]/10 to-[#FF00FF]/10 rounded-full border border-white/20 pulse-slow"></div>
             <div className="absolute inset-0 orb-particles"></div>
             
+            {isRoastMode ? (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-[#FF00FF] font-bold text-lg">
+                  {morphState === 0 ? <Bot className="w-8 h-8 animate-pulse" /> : 
+                   morphState === 1 ? <Cpu className="w-8 h-8 animate-pulse" /> : 
+                   <Bomb className="w-8 h-8 animate-pulse" />}
+                </div>
+              </div>
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-white font-bold text-lg eye-follow">
+                  👁️
+                </div>
+              </div>
+            )}
+            
             {Array.from({length: 3}).map((_, i) => (
               <div 
                 key={i}
-                className="absolute text-xs font-mono text-white/80 bg-black/40 px-2 py-1 rounded-full transform -translate-x-1/2 -translate-y-1/2 backdrop-blur-sm border border-[#00FFDD]/30"
-                style={{
-                  left: `${50 + Math.cos((Date.now() / 2000) + i * Math.PI * 2/3) * 130}%`,
-                  top: `${50 + Math.sin((Date.now() / 2000) + i * Math.PI * 2/3) * 130}%`,
-                  animation: `float ${3 + i}s ease-in-out infinite`,
-                  animationDelay: `${i * 0.3}s`
-                }}
-              >
-                {i === 0 ? "87% faster growth" : i === 1 ? "$2.5M avg funding" : "68% success rate"}
-              </div>
-            ))}
-          </div>
-          
-          <div className="relative mx-auto max-w-md perspective preserve-3d" style={{ 
-            transform: `translateZ(0) rotateY(${mousePosition.x * 10}deg) rotateX(${-mousePosition.y * 10}deg)`,
-            transition: 'transform 0.5s ease-out'
-          }}>
-            <div className={cn(
-              "rounded-2xl overflow-hidden shadow-2xl transform transition-transform duration-700 relative",
-              showEasterEgg ? "crt-effect" : ""
-            )}>
-              <img 
-                src="https://images.unsplash.com/photo-1568992687947-868a62a9f521?q=80&w=2952&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
-                alt="Founder with AI" 
-                className="w-full h-auto rounded-2xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-2xl"></div>
-              
-              <div className="absolute inset-0 data-grid opacity-50 pointer-events-none"></div>
-              
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#FF00FF]/20 to-[#00FFDD]/20 rounded-2xl"></div>
-              
-              <div className="absolute inset-0 glitch-overlay opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-            </div>
-            
-            <div 
-              ref={chatBubbleRef}
-              className="absolute -top-16 -right-8 max-w-xs p-4 rounded-2xl bg-black/80 shadow-lg animate-float backdrop-blur-sm border border-[#00FFDD]/30 hover:border-[#FF00FF]/50 transition-colors"
-            >
-              <div className="flex items-start gap-3">
-                <div className="relative h-8 w-8 rounded-full bg-gradient-to-br from-[#00FFDD] to-[#FF00FF] flex items-center justify-center shrink-0 shadow-glow">
-                  <MessageSquare className="h-4 w-4 text-white" />
-                  <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-[#00FFDD] animate-pulse-soft"></span>
-                </div>
-                <div>
-                  <p className="text-sm font-medium mb-1 text-white">Insirra GPT</p>
-                  <p className="text-sm chat-content text-white/90 font-mono"></p>
-                </div>
-              </div>
-              <div className="absolute bottom-0 left-6 transform translate-y-1/2 rotate-45 w-4 h-4 bg-black/80 border-r border-b border-[#00FFDD]/30"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-        <span className="text-sm mb-2 text-white font-mono glitch-text-sm">Swipe Up For More</span>
-        <div className="w-[30px] h-[50px] rounded-full border-2 border-[#00FFDD]/50 flex items-start justify-center p-1 relative overflow-hidden">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#FF00FF] animate-bounce mt-1"></div>
-          <div className="absolute inset-0 scanning-line"></div>
-        </div>
-        
-        <div className="absolute top-full mt-4 w-40 h-1 bg-white/20 rounded-full overflow-hidden">
-          <div 
-            className="h-full bg-gradient-to-r from-[#00FFDD] to-[#FF00FF]"
-            style={{ width: `${scrollProgress * 100}%` }}
-          ></div>
-        </div>
-      </div>
-      
-      <div className="absolute bottom-20 right-10 max-w-xs p-3 rounded-2xl bg-black/60 text-white/80 font-mono text-sm transform rotate-3 border border-red-500/30 cursor-pointer hidden md:block">
-        <p>"lol, startups are ded 💀"</p>
-        <div className="absolute inset-0 bg-gradient-to-r from-green-500/80 to-blue-500/80 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-2xl">
-          <p className="font-bold text-white">93% of unicorns used AI in 2023</p>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-export default Hero;
+                className="absolute text-xs font-mono text-white/80 bg-black/40 px-2 py-1 rounded-full transform -translate-x-1/2 -translate-y-1/2 backdrop-blur-sm
