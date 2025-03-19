@@ -493,11 +493,15 @@ const Hero: React.FC = () => {
             <img src="https://web.archive.org/web/20091026220832/http://www.geocities.com/Area51/Cavern/2686/construction.gif" alt="Under construction" />
           </div>
           <div className="absolute bottom-5 right-5 animate-pulse h-20 w-20">
-            <img src="https://web.archive.org/web/20091026220832/http://www.geocities.com/Area51/Cavern/2686/noframes.gif" alt="No frames" />
+            <img src="https://web.archive.org/web/20091027120212/http://www.geocities.com/Area51/Corridor/8611/ie.gif" alt="No frames" />
           </div>
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center p-6 bg-yellow-300 border-4 border-black rotate-3 shadow-[8px_8px_0_0_rgba(0,0,0,1)]">
-              <h2 className="text-2xl font-bold text-blue-700 mb-3 blink"><marquee>WELCOME TO MY STARTUP!!!</marquee></h2>
+              <h2 className="text-2xl font-bold text-blue-700 mb-3 blink">
+                <div className="animate-marquee whitespace-nowrap overflow-hidden">
+                  WELCOME TO MY STARTUP!!!&nbsp;&nbsp;&nbsp;WELCOME TO MY STARTUP!!!&nbsp;&nbsp;&nbsp;WELCOME TO MY STARTUP!!!
+                </div>
+              </h2>
               <p className="text-red-600 font-comic">This page is best viewed in NETSCAPE NAVIGATOR at 800x600 resolution!!</p>
               <div className="mt-4">
                 <img src="https://web.archive.org/web/20091027120212/http://www.geocities.com/Area51/Corridor/8611/ie.gif" alt="Netscape" className="inline-block h-10" />
@@ -633,6 +637,10 @@ const Hero: React.FC = () => {
               <div 
                 key={i}
                 className="absolute text-xs font-mono text-white/80 bg-black/40 px-2 py-1 rounded-full transform -translate-x-1/2 -translate-y-1/2 backdrop-blur-sm"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                }}
               >
                 {['🚀', '🔥', '💯', '🤖', '📈', '💸', '🦄', '🧠'][Math.floor(Math.random() * 8)]}
               </div>
