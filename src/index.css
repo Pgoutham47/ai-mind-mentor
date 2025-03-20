@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
@@ -7,65 +6,65 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
+    --background: 220 33% 98%;      /* Platinum #E8E9EB */
+    --foreground: 210 55% 12%;      /* Navy #0A1A2F */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card: 0 0% 100%;              /* White */
+    --card-foreground: 210 55% 12%; /* Navy #0A1A2F */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;           /* White */
+    --popover-foreground: 210 55% 12%; /* Navy #0A1A2F */
 
-    --primary: 221 83% 53%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 174 100% 39%;        /* Teal #00C7B3 */
+    --primary-foreground: 0 0% 100%; /* White */
 
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 220 20% 97%;       /* Soft Gray #F5F6F8 */
+    --secondary-foreground: 210 55% 12%; /* Navy #0A1A2F */
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 220 20% 97%;           /* Soft Gray #F5F6F8 */
+    --muted-foreground: 215 16% 47%; /* Graphite #5A6B7C */
 
-    --accent: 221 83% 53%;
-    --accent-foreground: 222 47% 11%;
+    --accent: 174 100% 39%;         /* Teal #00C7B3 */
+    --accent-foreground: 210 55% 12%; /* Navy #0A1A2F */
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;       /* Crimson #FF4D4D */
+    --destructive-foreground: 0 0% 100%; /* White */
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 221 83% 53%;
+    --border: 214 32% 91%;          /* Light Gray Border */
+    --input: 214 32% 91%;           /* Light Gray Input */
+    --ring: 174 100% 39%;           /* Teal #00C7B3 */
 
     --radius: 0.75rem;
   }
 
   .dark {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
+    --background: 210 55% 12%;      /* Deep Navy #0A1A2F */
+    --foreground: 220 33% 98%;      /* Platinum #E8E9EB */
 
-    --card: 222 47% 11%;
-    --card-foreground: 210 40% 98%;
+    --card: 210 38% 15%;            /* Charcoal #1A2A3A */
+    --card-foreground: 220 33% 98%; /* Platinum #E8E9EB */
 
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 210 38% 15%;         /* Charcoal #1A2A3A */
+    --popover-foreground: 220 33% 98%; /* Platinum #E8E9EB */
 
-    --primary: 217 91% 60%;
-    --primary-foreground: 222 47% 11%;
+    --primary: 174 100% 47%;        /* Brighter Teal #00F2D5 */
+    --primary-foreground: 210 55% 12%; /* Deep Navy #0A1A2F */
 
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 210 38% 15%;       /* Charcoal #1A2A3A */
+    --secondary-foreground: 220 33% 98%; /* Platinum #E8E9EB */
 
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 210 38% 15%;           /* Charcoal #1A2A3A */
+    --muted-foreground: 217 24% 63%; /* Silver #A0AEC0 */
 
-    --accent: 217 91% 60%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 174 100% 47%;         /* Brighter Teal #00F2D5 */
+    --accent-foreground: 220 33% 98%; /* Platinum #E8E9EB */
 
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 65%;       /* Coral #FF6B6B */
+    --destructive-foreground: 210 55% 12%; /* Deep Navy #0A1A2F */
 
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 224 76% 48%;
+    --border: 213 27% 24%;          /* Dark Gray Border */
+    --input: 213 27% 24%;           /* Dark Gray Input */
+    --ring: 174 100% 47%;           /* Brighter Teal #00F2D5 */
   }
 }
 
@@ -143,128 +142,35 @@
     transform-style: preserve-3d;
   }
 
-  /* Glitch effect styling */
-  .glitch-wrapper {
-    position: relative;
-    display: inline-block;
+  /* Adaptive Button Styles */
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 
+           dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90
+           px-6 py-2.5 rounded-full font-medium transition-all duration-300 
+           shadow-sm hover:shadow-md active:scale-98;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80
+           dark:bg-secondary/20 dark:text-secondary-foreground dark:hover:bg-secondary/30
+           px-6 py-2.5 rounded-full font-medium transition-all duration-300
+           border border-border/50 dark:border-border/30;
+  }
+  
+  .btn-outline {
+    @apply bg-transparent text-foreground hover:bg-secondary/80
+           dark:text-foreground dark:hover:bg-secondary/20
+           px-6 py-2.5 rounded-full font-medium transition-all duration-300
+           border border-border dark:border-border/50;
   }
 
-  .glitch {
-    position: relative;
-    animation: glitch 500ms infinite;
-  }
-
-  .glitch::before,
-  .glitch::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  .glitch::before {
-    left: 2px;
-    text-shadow: -2px 0 var(--glitch-color, rgba(77, 171, 245, 0.5));
-    clip: rect(24px, 550px, 90px, 0);
-    animation: glitch-anim 3s infinite linear alternate-reverse;
-  }
-
-  .glitch::after {
-    left: -2px;
-    text-shadow: -2px 0 var(--glitch-color, rgba(255, 0, 0, 0.5));
-    clip: rect(85px, 550px, 140px, 0);
-    animation: glitch-anim2 2.5s infinite linear alternate-reverse;
-  }
-
-  /* Mesh effect styling */
-  .mesh-effect {
-    mask-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.8' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
-    mask-size: 5px 5px;
-    transition: all 0.3s ease-out;
-  }
-
-  /* Cyberpunk effect */
-  .cyber-glitch {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .cyber-glitch::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transform: skewX(-25deg);
-    animation: cyber-glitch-anim 3s infinite;
-  }
-
-  /* Liquid edge effect */
-  .liquid-edge {
-    position: relative;
-    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-    animation: morph 8s ease-in-out infinite;
-    transition: all 0.3s ease-in-out;
-  }
-
-  /* Distortion effect */
-  .distortion-effect {
-    transition: filter 0.3s ease-out;
-  }
-
-  @keyframes cyber-glitch-anim {
-    0% {
-      left: -100%;
-    }
-    100% {
-      left: 200%;
-    }
-  }
-
-  @keyframes glitch-anim {
-    0% {
-      clip: rect(24px, 550px, 90px, 0);
-    }
-    20% {
-      clip: rect(45px, 550px, 50px, 0);
-    }
-    40% {
-      clip: rect(12px, 550px, 59px, 0);
-    }
-    60% {
-      clip: rect(78px, 550px, 73px, 0);
-    }
-    80% {
-      clip: rect(33px, 550px, 140px, 0);
-    }
-    100% {
-      clip: rect(53px, 550px, 116px, 0);
-    }
-  }
-
-  @keyframes glitch-anim2 {
-    0% {
-      clip: rect(76px, 550px, 100px, 0);
-    }
-    20% {
-      clip: rect(20px, 550px, 30px, 0);
-    }
-    40% {
-      clip: rect(90px, 550px, 140px, 0);
-    }
-    60% {
-      clip: rect(15px, 550px, 60px, 0);
-    }
-    80% {
-      clip: rect(24px, 550px, 78px, 0);
-    }
-    100% {
-      clip: rect(60px, 550px, 97px, 0);
-    }
+  /* Adaptive Card Styles */
+  .feature-card {
+    @apply bg-background dark:bg-card rounded-xl 
+           border border-border/50 dark:border-border/30 
+           shadow-sm hover:shadow-md transition-all duration-300
+           hover:border-primary/20 dark:hover:border-primary/30
+           p-6;
   }
 }
 
@@ -291,4 +197,3 @@
     transform: rotateX(3deg);
   }
 }
-
