@@ -170,7 +170,7 @@ export default {
 			},
 			fontFamily: {
 				sans: ['Inter', 'sans-serif'],
-				display: ['SF Pro Display', 'Inter', 'sans-serif']
+				display: ['Clash Display', 'Inter', 'sans-serif']
 			},
 		}
 	},
