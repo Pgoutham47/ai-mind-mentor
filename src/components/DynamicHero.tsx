@@ -245,8 +245,9 @@ const DynamicHero: React.FC<DynamicHeroProps> = ({ className }) => {
         </div>
       </div>
       
-      {/* CSS for special effects */}
-      <style jsx>{`
+      {/* CSS for special effects - Fix the jsx attribute error */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .particle-char {
           display: inline-block;
           will-change: transform, opacity;
@@ -294,7 +295,8 @@ const DynamicHero: React.FC<DynamicHeroProps> = ({ className }) => {
             transform: translateY(0);
           }
         }
-      `}</style>
+      `
+      }}></style>
     </div>
   );
 };
