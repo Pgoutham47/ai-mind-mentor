@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import HowItWorks from '@/components/HowItWorks';
@@ -11,6 +11,8 @@ import Footer from '@/components/Footer';
 import AnimatedContainer from '@/components/AnimatedContainer';
 
 const Index = () => {
+  const sceneRef = useRef<HTMLDivElement>(null);
+  
   // Smooth scroll functionality
   useEffect(() => {
     // Function to handle smooth scrolling for anchor links
@@ -143,8 +145,42 @@ const Index = () => {
     };
   }, []);
 
+  // Parallax effect for professional depth
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sceneRef.current) return;
+      const scrollY = window.scrollY;
+      const sections = document.querySelectorAll('.section');
+      
+      sections.forEach((section, index) => {
+        const rect = section.getBoundingClientRect();
+        const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+        
+        if (isInView) {
+          const scrollProgress = 1 - (rect.top / window.innerHeight);
+          
+          // Apply subtle parallax to section backgrounds
+          const parallaxElements = section.querySelectorAll('.parallax-bg');
+          parallaxElements.forEach((el: Element) => {
+            const speed = (el as HTMLElement).dataset.speed || '0.1';
+            const yPos = scrollY * parseFloat(speed);
+            (el as HTMLElement).style.transform = `translateY(${yPos}px)`;
+          });
+          
+          // Apply refined animations based on scroll progress
+          if (scrollProgress > 0.1 && scrollProgress < 0.9) {
+            section.classList.add('in-view');
+          }
+        }
+      });
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <div className="min-h-screen flex flex-col relative dark:bg-gray-900">
+    <div className="min-h-screen flex flex-col relative dark:bg-gray-900" ref={sceneRef}>
       {/* Background mesh effect - with dark mode support */}
       <div className="fixed inset-0 -z-10 overflow-hidden opacity-20 dark:opacity-30 pointer-events-none">
         <div className="absolute top-0 left-0 right-0 h-screen" style={{
@@ -215,7 +251,8 @@ const Index = () => {
       <Footer />
       
       {/* Custom CSS for dark mode support */}
-      <style jsx global>{`
+      <style>
+        {`
         /* Dark mode adjustments */
         :root {
           color-scheme: light dark;
@@ -263,7 +300,30 @@ const Index = () => {
           left: -2px;
           text-shadow: 1px 0 #00FFDD;
         }
-      `}</style>
+        
+        /* Professional animations */
+        .in-view {
+          animation: fadeInUp 0.7s ease-out forwards;
+        }
+        
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        /* Parallax container */
+        .parallax-bg {
+          will-change: transform;
+          transition: transform 0.1s ease-out;
+        }
+        `}
+      </style>
     </div>
   );
 };
